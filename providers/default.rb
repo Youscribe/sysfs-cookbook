@@ -23,7 +23,7 @@ action :save do
   ruby_block "add rule" do
     block do
       sysfsFile = Chef::Util::FileEdit.new('/etc/sysfs.conf')
-      sysfsFile.insert_line_if_no_match(/#{getVariable}/, getVariable + ' = ' + new_resource.value
+      sysfsFile.insert_line_if_no_match(/#{getVariable}/, getVariable + ' = ' + new_resource.value)
       sysfsFile.write_file
     end
   end
