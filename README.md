@@ -36,17 +36,17 @@ sysfs 'block/sda/queue/scheduler' do
 end
    
 # the same.
-sysctl 'set io scheduler to cfq' do
+sysfs 'set io scheduler to cfq' do
   variable 'block/sda/queue/scheduler'
   value 'cfq'
 end
 
-sysctl 'block/sda/queue/scheduler' do
+sysfs 'block/sda/queue/scheduler' do
   action :remove
 end
 
 # Set set scaling governator but don't save it.
-sysctl 'devices/system/cpu/cpu0/cpufreq/scaling_governor' do
+sysfs 'devices/system/cpu/cpu0/cpufreq/scaling_governor' do
   action :set
   value 'powersave'
 end
