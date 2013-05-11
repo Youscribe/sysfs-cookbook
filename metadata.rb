@@ -1,3 +1,4 @@
+name 		'sysfs'
 maintainer       "Guilhem Lettron"
 maintainer_email "guilhem.lettron@youscribe.com"
 license          "Apache v2.0"
