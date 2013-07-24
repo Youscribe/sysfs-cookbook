@@ -23,7 +23,8 @@ action :save do
   ruby_block "add rule" do
     block do
       sysfsFile = Chef::Util::FileEdit.new('/etc/sysfs.conf')
-      sysfsFile.insert_line_if_no_match(/#{getVariable}/, getVariable + ' = ' + new_resource.value)
+      sysfsFile.search_file_replace_line(/^\s*#{getVariable}/, getVariable + ' = ' + new_resource.value)
+      sysfsFile.insert_line_if_no_match(/^#{getVariable}/, getVariable + ' = ' + new_resource.value)
       sysfsFile.write_file
     end
   end
@@ -46,7 +47,7 @@ action :remove do
   ruby_block "add rule" do
     block do
       sysfsFile = Chef::Util::FileEdit.new('/etc/sysfs.conf')
-      sysfsFile.search_file_delete_line(/#{getVariable}/)
+      sysfsFile.search_file_delete_line(/^\s*#{getVariable}/)
       sysfsFile.write_file
     end
   end
