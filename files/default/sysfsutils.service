@@ -1,0 +1,9 @@
+[Unit]
+Description=Sysfsutils Service
+
+[Service]
+Type=simple
+ExecStart=/etc/init.d/sysfsutils start
+
+[Install]
+WantedBy=multi-user.target

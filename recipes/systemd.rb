@@ -1,9 +1,9 @@
 #
 # Cookbook Name:: sysfs
-# Recipe:: default
-# Author:: Guilhem Lettron <guilhem.lettron@youscribe.com>
+# Recipe:: systemd
+# Author:: Jonathan Morley <jmorley@cvent.com>
 #
-# Copyright 2012, Societe Publica.
+# Copyright 2015, Cvent, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,17 +18,12 @@
 # limitations under the License.
 #
 
-package node['sysfs']['package']
+include_recipe 'sysfs::sysv'
 
-if node['sysfs']['init_type']
-  include_recipe "sysfs::#{node['sysfs']['init_type']}"
-end
-
-service node['sysfs']['service'] do
-  action [ :start, :enable ]
-end
-
-service 'tuned' do
-  action :disable
-  only_if { node['sysfs']['disable_tuned'] }
+cookbook_file '/etc/systemd/system/sysfsutils.service' do
+  source 'sysfsutils.service'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  action :create
 end
