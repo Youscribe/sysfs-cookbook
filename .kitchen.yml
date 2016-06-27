@@ -10,8 +10,8 @@ platforms:
   - name: ubuntu-10.04
   - name: ubuntu-12.04
   - name: ubuntu-14.10
-  - name: centos-6.6
-  - name: centos-7.0
+  - name: centos-6.7
+  - name: centos-7.2
 
 suites:
 - name: default
