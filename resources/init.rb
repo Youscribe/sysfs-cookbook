@@ -19,20 +19,33 @@
 #
 
 provides :sysfs do |node|
-  node['init_package'] == 'init' && node['platform_family'] != 'debian'
+  node['init_package'] == 'init'
 end
 
 property :variable, String, name_attribute: true
 property :value, String, required: true
 
-action :save do
-  cookbook_file '/etc/init.d/sysfsutils' do
-    action :create
-    source 'sysfsutils'
-    cookbook 'sysfs'
-    owner 'root'
-    group 'root'
-    mode '0755'
+action :install do
+  if node['platform_family'] == 'debian'
+    package 'sysfsutils'
+  else
+    cookbook_file '/etc/init.d/sysfsutils' do
+      action :create
+      source 'sysfsutils'
+      cookbook 'sysfs'
+      owner 'root'
+      group 'root'
+      mode '0755'
+    end
+
+    cookbook_file '/etc/sysfs.conf' do
+      action :create_if_missing
+      source 'sysfs.conf'
+      cookbook 'sysfs'
+      owner 'root'
+      group 'root'
+      mode '0644'
+    end
   end
 
   service 'sysfsutils' do
@@ -42,15 +55,10 @@ action :save do
   service 'tuned' do
     action :disable
   end
+end
 
-  cookbook_file '/etc/sysfs.conf' do
-    action :create_if_missing
-    source 'sysfs.conf'
-    cookbook 'sysfs'
-    owner 'root'
-    group 'root'
-    mode '0644'
-  end
+action :save do
+  action_install
 
   directory '/etc/sysfs.d'
   file ::File.join '/etc/sysfs.d', variable.gsub('/', '_') do
