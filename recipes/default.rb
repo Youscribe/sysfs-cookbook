@@ -18,17 +18,14 @@
 # limitations under the License.
 #
 
-package node['sysfs']['package']
+package 'sysfsutils'
 
-if node['sysfs']['init_type']
-  include_recipe "sysfs::#{node['sysfs']['init_type']}"
-end
+include_recipe "sysfs::#{node['init_package']}"
 
-service node['sysfs']['service'] do
+service 'sysfsutils' do
   action [ :start, :enable ]
 end
 
 service 'tuned' do
   action :disable
-  only_if { node['sysfs']['disable_tuned'] }
-end
+end if node['sysfs']['disable_tuned']

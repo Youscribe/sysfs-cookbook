@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: sysfs
-# Recipe:: sysv
+# Recipe:: init
 # Author:: Jonathan Morley <jmorley@cvent.com>
 #
 # Copyright 2015, Cvent, Inc.
