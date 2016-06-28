@@ -1,9 +1,9 @@
 #
 # Cookbook Name:: sysfs
-# Recipe:: systemd
+# Resource:: sysfs_debian
 # Author:: Jonathan Morley <jmorley@cvent.com>
 #
-# Copyright 2015, Cvent, Inc.
+# Copyright 2016, Cvent Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,12 +18,34 @@
 # limitations under the License.
 #
 
-include_recipe 'sysfs::sysv'
+provides :sysfs, platform_family: 'debian'
 
-cookbook_file '/etc/systemd/system/sysfsutils.service' do
-  source 'sysfsutils.service'
-  owner 'root'
-  group 'root'
-  mode '0644'
-  action :create
+property :variable, String, name_attribute: true
+property :value, String, required: true
+
+action :save do
+  package 'sysfsutils'
+  service 'sysfsutils' do
+    action :enable
+  end
+
+  directory '/etc/sysfs.d'
+  file ::File.join '/etc/sysfs.d', variable.gsub('/', '_') do
+    action :create
+    content "#{variable} = #{value}"
+  end
+
+  action_set
+end
+
+action :set do
+  file "/sys/#{variable}" do
+    content value
+  end
+end
+
+action :remove do
+  file ::File.join '/etc/sysfs.d', variable.gsub('/', '_') do
+    action :remove
+  end
 end

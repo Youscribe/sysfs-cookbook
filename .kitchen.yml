@@ -5,6 +5,9 @@ driver:
 provisioner:
   name: chef_zero
 
+verifier:
+  name: inspec
+
 platforms:
   - name: debian-7.8
   - name: ubuntu-10.04
@@ -16,4 +19,4 @@ platforms:
 suites:
 - name: default
   run_list:
-      - recipe[sysfs::default]
+      - recipe[sysfs-test]

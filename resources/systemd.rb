@@ -1,9 +1,9 @@
 #
 # Cookbook Name:: sysfs
-# Recipe:: init
+# Resource:: sysfs_systemd
 # Author:: Jonathan Morley <jmorley@cvent.com>
 #
-# Copyright 2015, Cvent, Inc.
+# Copyright 2016, Cvent Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,25 +18,38 @@
 # limitations under the License.
 #
 
-cookbook_file '/etc/sysfs.conf' do
-  source 'sysfs.conf'
-  owner 'root'
-  group 'root'
-  mode '0644'
-  action :create
+provides :sysfs do |node|
+  node['init_package'] == 'systemd'
 end
 
-cookbook_file '/etc/init.d/sysfsutils' do
-  source 'sysfsutils'
-  owner 'root'
-  group 'root'
-  mode '0755'
-  action :create
+property :variable, String, name_attribute: true
+property :value, String, required: true
+
+action :save do
+  service 'systemd-tmpfiles-setup' do
+    action :enable
+  end
+
+  service 'tuned' do
+    action :disable
+  end
+
+  systemd_tmpfile variable.gsub('/', '_') do
+    action :create
+    path "/sys/#{variable}"
+    argument value
+    type 'w'
+  end
 end
 
-directory "/etc/sysfs.d" do
-  owner 'root'
-  group 'root'
-  mode '0755'
-  action :create
+action :set do
+  file "/sys/#{variable}" do
+    content value
+  end
+end
+
+action :remove do
+  systemd_tmpfile variable.gsub('/', '_') do
+    action :delete
+  end
 end

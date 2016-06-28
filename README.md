@@ -9,7 +9,7 @@ Attributes
 Usage
 =====
 
-With Ressource/Provider.
+With Resource/Provider.
 
 Resource/Provider
 =================
@@ -34,7 +34,7 @@ sysfs
 sysfs 'block/sda/queue/scheduler' do
   value 'noop'
 end
-   
+
 # the same.
 sysfs 'set io scheduler to cfq' do
   variable 'block/sda/queue/scheduler'
